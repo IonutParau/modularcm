@@ -23,6 +23,15 @@ function _FixedGrid:create()
   end
 end
 
+function _FixedGrid:indir(x, y, dir, amount)
+  amount = amount or 1
+
+  if dir == 0 then return x + amount, y end
+  if dir == 1 then return x, y + amount end
+  if dir == 2 then return x - amount, y end
+  if dir == 3 then return x, y - amount end
+end
+
 ---@param callback function
 ---@param alignment GridAlignment
 function _FixedGrid:loopGrid(callback, alignment)

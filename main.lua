@@ -132,6 +132,7 @@ function Depend(...)
   local t = { ... }
   for _, p in ipairs(t) do
     if not depended[p] then
+      print("Loaded package " .. p)
       depended[p] = true
       require("packages." .. p .. ".init")
     end

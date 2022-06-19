@@ -85,3 +85,22 @@ BindCommand("get-bg", function(args)
   print("ID: " .. c.id)
   print("ROT: " .. c.rot)
 end)
+
+local cellConfig = {}
+local creationListeners = {}
+
+function AddPostCellCreationListener(listener)
+  table.insert(creationListeners, listener)
+end
+
+function CreateCell(id, config)
+  cellConfig[id] = config
+
+  for _, listener in ipairs(creationListeners) do
+    listener(id, config)
+  end
+end
+
+function GetCellConfig(id)
+  return cellConfig[id] or {}
+end
