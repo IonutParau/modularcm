@@ -10,3 +10,5 @@ function UpdateGrid()
     subtick(Grid)
   end
 end
+
+BindCommand("update", UpdateGrid)
