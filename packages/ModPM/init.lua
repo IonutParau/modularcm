@@ -12,7 +12,9 @@ local function InstallFromLocal(f)
 
   local data = json.decode(decompressed)
 
-  local name = "Love2D"
+  local name = data.name
+
+  if not name then print("Unable to find package name") return false end
 
   os.execute("mkdir " .. JoinPath("packages", name))
 
