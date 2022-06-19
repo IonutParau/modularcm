@@ -11,7 +11,7 @@ You can install Lua (version 5.1 or above), or LuaJIT, and simply run main.lua
 
 There is no GUI out of the box. You need a package for that.
 
-## How do I add my extra stuff someone else made?
+## How do I add extra stuff someone else made?
 
 Using the Module Package Manager (ModPM). Simply download the file of the package you want to add, and then launch the game and run
 
@@ -22,7 +22,7 @@ mod add <path to file>
 Example:
 You downloaded, let's say, "cool-gui.modpkg", and you want to add it.
 
-You can simply add it in the folder where your game is at, and run (inside of the game's terminal)
+You can simply move it to the folder where your game is at, and run (inside of the game's terminal)
 
 ```
 mod add cool-gui.modpkg

@@ -117,6 +117,12 @@ local function Mod(args)
     for _, package in pairs(packages) do
       print(package)
     end
+  elseif action == "help" then
+    print("Usage: mod <action> [args]")
+    print("Actions:")
+    print("  add <file>")
+    print("  compile <package>")
+    print("  list")
   end
 end
 
