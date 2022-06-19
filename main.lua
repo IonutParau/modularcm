@@ -139,6 +139,10 @@ function Depend(...)
   end
 end
 
+BindCommand("load", function(args)
+  Depend(args[1])
+end)
+
 for _, package in ipairs(packages) do
   Depend(package)
 end

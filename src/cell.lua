@@ -1,8 +1,12 @@
 ---@class Cell
+---@field id string
+---@field rot number
+---@field data table
+---@field updated boolean
 ---@param id string
 ---@param rot number
 ---@param data table
----@param updated boolean
+---@return Cell
 function Cell(id, rot, data)
   return {
     id = id,
