@@ -15,6 +15,8 @@ local function InstallFromLocal(f)
 
   if not name then print("Unable to find package name") return false end
 
+  print("Installing " .. name)
+
   os.execute("mkdir " .. JoinPath("packages", name))
 
   local files = data.files
@@ -135,7 +137,11 @@ local function Mod(args)
   if action == "add" then
     local f = args[2]
     local s = InstallFromLocal(f)
-    if s then print("Successfully installed package from local file") else print("Failed to install package") end
+    if s then
+      print("Successfully installed package from local file")
+    else
+      print("Failed to install package")
+    end
   elseif action == "compile" then
     local package = args[2]
     print("Compiling...")
