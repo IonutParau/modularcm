@@ -27,7 +27,7 @@ end
 
 function IsDir(path)
   local f = io.open(path)
-  ---@diagnostic disable-next-line: need-check-nil
+  if not f then return true end
   return not f:read(0) and f:seek("end") ~= 0
 end
 
