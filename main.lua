@@ -28,9 +28,9 @@ end
 function IsDir(path)
   local f = io.open(path, "r")
   if not f then return false end
-  local x, err = f:read(1)
+  local x, err, code = f:read(1)
   f:close()
-  return err == "Is a directory"
+  return err == "Is a directory" or code == 21
 end
 
 function BindCommand(commandName, runner)
