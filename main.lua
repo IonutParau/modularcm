@@ -27,10 +27,10 @@ end
 
 function IsDir(path)
   local f = io.open(path, "r")
-  if not f then return false end
+  if not f then return true end
   local x, err, code = f:read(1)
   f:close()
-  return err == "Is a directory" or code == 21
+  return err == "Is a directory" or (IsWindows and x == 1 and code == nil and err == nil)
 end
 
 function BindCommand(commandName, runner)

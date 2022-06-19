@@ -2,11 +2,13 @@
 ---@param id string
 ---@param rot number
 ---@param data table
+---@param updated boolean
 function Cell(id, rot, data)
   return {
     id = id,
     rot = rot,
     data = data,
+    updated = false,
   }
 end
 
