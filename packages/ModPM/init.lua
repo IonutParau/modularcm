@@ -1,4 +1,4 @@
-local LZW = require "lualzw"
+local compression = require "LibDeflate"
 local json = require "json"
 
 local function InstallFromLocal(f)
@@ -8,7 +8,7 @@ local function InstallFromLocal(f)
 
   local content = file:read("*a")
 
-  local decompressed = LZW.decompress(content)
+  local decompressed = compression:DecompressDeflate(content)
 
   local data = json.decode(decompressed)
 
@@ -20,10 +20,34 @@ local function InstallFromLocal(f)
 
   local files = data.files
 
+  local outdirs = {}
+  local outfiles = {}
+  local out = {}
+
   for path, fileContent in pairs(files) do
     if fileContent == 1 then
+      table.insert(outdirs, path)
+    else
+      table.insert(outfiles, path)
+    end
+  end
+
+  for _, path in ipairs(outdirs) do
+    table.insert(out, path)
+  end
+
+  for _, path in ipairs(outfiles) do
+    table.insert(out, path)
+  end
+
+  for _, path in ipairs(out) do
+    local fileContent = files[path]
+
+    if fileContent == 1 then
+      print("Creating directory " .. path .. "...")
       os.execute("mkdir " .. JoinPath("packages", name, unpack(SplitStr(path, "/"))))
     else
+      print("Creating file " .. path .. "...")
       local p = JoinPath("packages", name, unpack(SplitStr(path, "/")))
       local thisFile, ferr = io.open(p, "w")
       if not thisFile then print("Failed to build file " .. path .. ": " .. ferr) return false end
@@ -45,7 +69,7 @@ local function getpackagefiles(folder)
 
   for _, file in pairs(files) do
     if IsDir(JoinPath(folder, file)) then
-      table.insert(JoinPath(folder, file))
+      table.insert(t, JoinPath(folder, file))
       local subfiles = getpackagefiles(JoinPath(folder, file))
       for _, subfile in pairs(subfiles) do
         table.insert(t, subfile)
@@ -65,6 +89,7 @@ local function Compile(package)
   local files = {}
 
   for _, file in ipairs(t) do
+    print("Compiling " .. file .. "...")
     if IsDir(file) then
       local fileNameSplit = SplitStr(file, sep)
       table.remove(fileNameSplit, 1)
@@ -87,7 +112,7 @@ local function Compile(package)
     name = package,
   }
 
-  local compressed = LZW.compress(json.encode(p))
+  local compressed = compression:CompressDeflate(json.encode(p))
 
   print("Compiled package...")
 

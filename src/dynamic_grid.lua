@@ -37,7 +37,7 @@ end
 ---@param y number
 function _DynamicGrid:getBackground(x, y)
   if not self:inside(x, y) then return Cell("empty", 0, {}) end
-  return self.bg[x][y]
+  return self.bg[tostring(x) .. " " .. tostring(y)]
 end
 
 ---@param x number
@@ -45,7 +45,7 @@ end
 ---@param cell Cell
 function _DynamicGrid:setBackground(x, y, cell)
   if not self:inside(x, y) then return end
-  self.bg[x][y] = cell
+  self.bg[tostring(x) .. " " .. tostring(y)] = cell
 end
 
 ---@param callback function
