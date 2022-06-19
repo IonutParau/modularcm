@@ -97,7 +97,9 @@ local function Compile(package)
       local fileName = table.concat(fileNameSplit, "/")
       files[fileName] = 1
     else
-      local fileContent = io.open(file, "r"):read("*a")
+      local nf, err = io.open(file, "r")
+      if not nf then print("Failed to open file " .. file .. ": " .. err) return end
+      local fileContent = nf:read("*a")
       local fileNameSplit = SplitStr(file, sep)
       table.remove(fileNameSplit, 1)
       table.remove(fileNameSplit, 1)
