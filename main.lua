@@ -26,11 +26,9 @@ function ScanDir(directory)
 end
 
 function IsDir(path)
-  local f = io.open(path, "r")
-  if not f then return true end
-  local x, err, code = f:read(1)
-  f:close()
-  return err == "Is a directory" or (IsWindows and x == 1 and code == nil and err == nil)
+  local f = io.open(path)
+  ---@diagnostic disable-next-line: need-check-nil
+  return not f:read(0) and f:seek("end") ~= 0
 end
 
 function BindCommand(commandName, runner)
