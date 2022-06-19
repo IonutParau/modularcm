@@ -31,6 +31,8 @@ function IsDir(path)
   return not f:read(0) and f:seek("end") ~= 0
 end
 
+---@param commandName string
+---@param runner function
 function BindCommand(commandName, runner)
   commands[commandName] = runner
 end

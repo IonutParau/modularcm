@@ -1,4 +1,3 @@
-local compression = require "LibDeflate"
 local json = require "json"
 
 local function InstallFromLocal(f)
@@ -8,7 +7,7 @@ local function InstallFromLocal(f)
 
   local content = file:read("*a")
 
-  local decompressed = compression:DecompressDeflate(content)
+  local decompressed = content
 
   local data = json.decode(decompressed)
 
@@ -114,7 +113,7 @@ local function Compile(package)
     name = package,
   }
 
-  local compressed = compression:CompressDeflate(json.encode(p))
+  local compressed = json.encode(p)
 
   print("Compiled package...")
 
