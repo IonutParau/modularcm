@@ -131,6 +131,16 @@ local function Compile(package)
   file:close()
 end
 
+local function Delete(package)
+  print("Deleting " .. package .. "...")
+  if IsWindows then
+    os.execute("rmdir " .. JoinPath("packages", package) .. "/s /q")
+  else
+    os.execute("rm -rd " .. JoinPath("packages", package) .. " -r")
+  end
+  print("Deleted Love2D_UI.")
+end
+
 local function Mod(args)
   local action = args[1]
 
@@ -151,11 +161,15 @@ local function Mod(args)
     for _, package in pairs(packages) do
       print(package)
     end
+  elseif action == "delete" then
+    local package = args[2]
+    Delete(package)
   elseif action == "help" then
     print("Usage: mod <action> [args]")
     print("Actions:")
     print("  add <file>")
     print("  compile <package>")
+    print("  delete <package>")
     print("  list")
   end
 end
