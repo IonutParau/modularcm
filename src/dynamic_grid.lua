@@ -6,6 +6,7 @@ _DynamicGrid.__index = _DynamicGrid
 
 function _DynamicGrid:create()
   self.cells = {}
+  self.bg = {}
 end
 
 ---@param x number
