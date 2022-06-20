@@ -1,0 +1,13 @@
+AddTextureToCell("mover", love.graphics.newImage("packages/Love2D_UI/textures/mover.png"))
+AddTextureToCell("generator", love.graphics.newImage("packages/Love2D_UI/textures/generator.png"))
+AddTextureToCell("rotatorCW", love.graphics.newImage("packages/Love2D_UI/textures/rotatorCW.png"))
+AddTextureToCell("rotatorCCW", love.graphics.newImage("packages/Love2D_UI/textures/rotatorCCW.png"))
+AddTextureToCell("enemy", love.graphics.newImage("packages/Love2D_UI/textures/enemy.png"))
+AddTextureToCell("push", love.graphics.newImage("packages/Love2D_UI/textures/push.png"))
+AddTextureToCell("slide", love.graphics.newImage("packages/Love2D_UI/textures/slide.png"))
+AddTextureToCell("trash", love.graphics.newImage("packages/Love2D_UI/textures/trash.png"))
+AddTextureToCell("nonexistant", love.graphics.newImage("packages/Love2D_UI/textures/nonexistant.png"))
+AddTextureToCell("wall", love.graphics.newImage("packages/Love2D_UI/textures/wall.png"))
+
+AddTextureToBackground("empty", love.graphics.newImage("packages/Love2D_UI/textures/empty.png"))
+AddTextureToBackground("placeable", love.graphics.newImage("packages/Love2D_UI/textures/placeable.png"))

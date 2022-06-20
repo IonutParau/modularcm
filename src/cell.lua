@@ -30,6 +30,8 @@ BindCommand("set-cell", function(args)
   local rot = tonumber(args[4])
   if not rot then return print("Rotation field is not a number.") end
 
+  rot = rot % 4
+
   local cell = Cell(id, rot, {})
 
   Grid:set(x, y, cell)
@@ -99,7 +101,10 @@ function AddPostCellCreationListener(listener)
   table.insert(creationListeners, listener)
 end
 
+Cells = {}
+
 function CreateCell(id, config)
+  table.insert(Cells, id)
   cellConfig[id] = config
 
   for _, listener in ipairs(creationListeners) do
@@ -107,6 +112,17 @@ function CreateCell(id, config)
   end
 end
 
+BindCommand("list-cells", function()
+  print("[ Cells ]")
+  for _, id in ipairs(Cells) do
+    print(id)
+  end
+end)
+
 function GetCellConfig(id)
   return cellConfig[id] or {}
+end
+
+function ToSide(dir, rot)
+  return (dir - rot + 2) % 4
 end

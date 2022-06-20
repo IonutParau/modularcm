@@ -4,8 +4,26 @@ local json = require "json"
 
 ---@type FixedGrid|DynamicGrid|nil
 Grid = nil
+---@type FixedGrid|DynamicGrid|nil
+InitialGrid = nil
 
 IsWindows = package.config:sub(1, 1) == '\\'
+
+---@param t table
+---@return table
+function table.copy(t)
+  local nt = {}
+
+  for k, v in pairs(t) do
+    if type(v) == "table" then
+      nt[k] = table.copy(v)
+    else
+      nt[k] = v
+    end
+  end
+
+  return nt
+end
 
 function ScanDir(directory)
   local i, t, popen = 0, {}, io.popen
@@ -124,6 +142,8 @@ end
 
 require "src.cell"
 require "src.grid"
+require "src.movement.push"
+require "src.update"
 
 local packages = ScanDir "packages"
 

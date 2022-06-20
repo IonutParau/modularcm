@@ -121,6 +121,12 @@ function _FixedGrid:new(width, height)
   return c
 end
 
+function _FixedGrid:copy()
+  local g = _FixedGrid:new(self.width, self.height)
+  g.bg = table.copy(self.bg)
+  g.cells = table.copy(self.cells)
+end
+
 ---@param width number
 ---@param height number
 function FixedGrid(width, height)
@@ -135,4 +141,5 @@ BindCommand("create-fixed-grid", function(args)
 
   Grid = FixedGrid(width, height)
   print("Created a " .. width .. "x" .. height .. " grid.")
+  InitialGrid = Grid:copy()
 end)
