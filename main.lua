@@ -144,6 +144,7 @@ require "src.cell"
 require "src.grid"
 require "src.movement.push"
 require "src.update"
+require "src.callback"
 
 local packages = ScanDir "packages"
 
