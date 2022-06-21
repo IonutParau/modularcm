@@ -83,11 +83,31 @@ local function getpackagefiles(folder)
   return t
 end
 
+local deflate = require('LibDeflate')
+
+local function obfuscate(file, content, amount)
+  amount = amount or (math.random(1, 20))
+
+  local obfuscated = deflate:EncodeForPrint(deflate:CompressDeflate(content, { level = 9 }))
+  local code = "local deflate = require('LibDeflate')\n"
+  code = code .. "local content = deflate:DecompressDeflate(deflate:DecodeForPrint(\"" .. obfuscated .. "\"))\n"
+  code = code .. "return load(content, \"" .. file .. "\", \"bt\", _G)()"
+
+  if amount == 1 then
+    return code
+  else
+    return obfuscate(file, code, amount - 1)
+  end
+end
+
 local function Compile(package)
   local t = getpackagefiles(JoinPath("packages", package))
   local sep = IsWindows and "\\" or "/"
 
   local files = {}
+
+  print("Would you like to obfuscate the package? (y/n)")
+  local obfuscateAnswer = io.read()
 
   for _, file in ipairs(t) do
     print("Compiling " .. file .. "...")
@@ -105,6 +125,10 @@ local function Compile(package)
       table.remove(fileNameSplit, 1)
       table.remove(fileNameSplit, 1)
       local fileName = table.concat(fileNameSplit, "/")
+
+      if obfuscateAnswer == "y" then
+        fileContent = obfuscate(fileName, fileContent)
+      end
 
       files[fileName] = fileContent
     end
