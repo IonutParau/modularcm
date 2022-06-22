@@ -20,10 +20,10 @@ function SaveGrid(format)
 
     if type(format) == "string" then
         if type(formats[format].encode) == "function" then
-            Output('Encoding with ' .. format .. '...')
+            print('Encoding with ' .. format .. '...')
             return formats[format].encode(Grid)
         else
-            Output('Format ' .. format .. ' has no encoder.')
+            print('Format ' .. format .. ' has no encoder.')
             return nil
         end
     else
@@ -35,7 +35,7 @@ end
 function DecodeString(string)
     for format, formatData in pairs(formats) do
         if string:sub(1, #(formatData.signature)) == formatData.signature then
-            Output('Decoding with ' .. format .. '...')
+            print('Decoding with ' .. format .. '...')
             return formatData.decode(string)
         end
     end

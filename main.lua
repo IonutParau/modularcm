@@ -183,10 +183,6 @@ end
 
 RunQueue "init"
 
-function Output(...)
-  if canShell then return print(...) end
-end
-
 while canShell do
   RunQueue("pre-cmd")
   local l = ModularCM.shell()
