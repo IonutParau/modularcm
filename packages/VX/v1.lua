@@ -14,7 +14,7 @@ return function(str)
     for _, s in ipairs(placementCellLocationsStr) do
       local ssplit = SplitStr(s, '.')
       local x = tonumber(ssplit[1])
-      local y = tonumber(ssplit[2])
+      local y = height - tonumber(ssplit[2]) - 1
       grid:setBackground(x, y, Cell("place", 0, {}))
     end
   end
