@@ -60,6 +60,7 @@ BindCommand("exit", function() os.exit(0) end)
 ---@param cmd string
 ---@param args table
 function Shell(cmd, args)
+  if not cmd then return end
   local command = commands[cmd]
   if command then
     command(args)

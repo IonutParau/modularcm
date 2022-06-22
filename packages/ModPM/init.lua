@@ -162,7 +162,7 @@ local function Delete(package)
   else
     os.execute("rm -rd " .. JoinPath("packages", package) .. " -r")
   end
-  print("Deleted Love2D_UI.")
+  print("Deleted " .. package .. ".")
 end
 
 local function Mod(args)
