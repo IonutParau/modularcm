@@ -36,7 +36,7 @@ function DecodeString(string)
     for format, formatData in pairs(formats) do
         if string:sub(1, #(formatData.signature)) == formatData.signature then
             Output('Decoding with ' .. format .. '...')
-            return formatData.decode(Grid, string)
+            return formatData.decode(string)
         end
     end
 end

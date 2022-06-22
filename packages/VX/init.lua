@@ -2,10 +2,10 @@ VX = {}
 VX.cells = {}
 VX.cellKey = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!$%&+-.=?^{}";
 
-local cheatsheet = {}
+VX.cheatsheet = {}
 
 for i = 1, #VX.cellKey do
-    cheatsheet[VX.cellKey:sub(i, i)] = (i - 1)
+    VX.cheatsheet[VX.cellKey:sub(i, i)] = (i - 1)
 end
 
 function VX:decodeNum(n)
@@ -13,7 +13,7 @@ function VX:decodeNum(n)
 
     for i = 1, #n do
         output = output * (#VX.cellKey)
-        output = output + (cheatsheet[n:sub(i, i)])
+        output = output + (VX.cheatsheet[n:sub(i, i)])
     end
 
     return output
@@ -33,16 +33,21 @@ end
 --                 false);
 --         }
 
-function VX:setCell(c, i)
-    local x = i % Grid.width
-    local y = Grid.height - math.floor(i / Grid.height) -- We gotta flip it because... Unity
+---@param g FixedGrid
+---@param c number
+---@param i number
+function VX:setCell(g, c, i)
+    local x = i % g.width
+    local y = g.height - math.floor(i / g.height) -- We gotta flip it because... Unity
     if c % 2 == 1 then
-        Grid:setBackground(x, y, Cell("place", 0, {}))
+        g:setBackground(x, y, Cell("place", 0, {}))
     end
 
     if c >= 72 then return end
 
-    Grid:set(x, y, Cell(VX.cells[math.floor(c / 2) % VX.cells], math.floor(c / 18), {}))
+    g:set(x, y, Cell(VX.cells[math.floor(c / 2) % VX.cells], math.floor(c / 18), {}))
 end
 
 CreateFormat("V1", "V1;", nil, require("packages.VX.v1"))
+CreateFormat("V2", "V2;", nil, require("packages.VX.v2"))
+CreateFormat("V3", "V3;", nil, require("packages.VX.v3"))
