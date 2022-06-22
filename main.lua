@@ -140,6 +140,17 @@ function JoinPath(...)
   return table.concat(t, sep)
 end
 
+ModularCM = {}
+ModularCM.version = "0.-1.1"
+
+local packages = ScanDir "packages"
+ModularCM.packages = packages
+ModularCM.shell = function()
+  io.write("> ")
+  local line = io.read()
+  RunCmd(line)
+  return line
+end
 require "src.cell"
 require "src.grid"
 require "src.movement.push"
@@ -147,7 +158,7 @@ require "src.callback"
 require "src.update"
 require "src.saving"
 
-local packages = ScanDir "packages"
+
 
 local depended = {}
 function Depend(...)
@@ -171,15 +182,12 @@ end
 
 RunQueue "init"
 
----@diagnostic disable-next-line: lowercase-global
-function output(...)
+function Output(...)
   if canShell then return print(...) end
 end
 
 while canShell do
   RunQueue("pre-cmd")
-  io.write("> ")
-  local line = io.read()
-  RunCmd(line)
-  RunQueue("post-cmd", line)
+  local l = ModularCM.shell()
+  RunQueue("post-cmd", l)
 end

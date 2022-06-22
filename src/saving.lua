@@ -20,10 +20,10 @@ function SaveGrid(format)
 
     if type(format) == "string" then
         if type(formats[format].encode) == "function" then
-            output('Encoding with ' .. format .. '...')
+            Output('Encoding with ' .. format .. '...')
             return formats[format].encode(Grid)
         else
-            output('Format ' .. format .. ' has no encoder.')
+            Output('Format ' .. format .. ' has no encoder.')
             return nil
         end
     else
@@ -35,13 +35,24 @@ end
 function DecodeGrid(string)
     for format, formatData in pairs(formats) do
         if string:sub(1, #(formatData.signature)) == formatData.signature then
-            output('Decoding with ' .. format .. '...')
-            return formatData.decode(string)
+            Output('Decoding with ' .. format .. '...')
+            return formatData.decode(Grid, string)
         end
     end
 end
 
 BindCommand("save-level", function(args)
+    local format = args[1] or currentSaving
+
+    if format == nil then
+        print("No level saving format is installed.")
+    else
+        local s = SaveGrid(format)
+        if s then print(s) end
+    end
+end)
+
+BindCommand("load-level", function(args)
     local format = args[1] or currentSaving
 
     if format == nil then

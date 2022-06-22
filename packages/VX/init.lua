@@ -4,18 +4,18 @@ VX.cellKey = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!$%&
 
 local cheatsheet = {}
 
-for i=1,#VX.cellKey do
-    cheatsheet[VX.cellKey:sub(i, i)] = (i-1)
+for i = 1, #VX.cellKey do
+    cheatsheet[VX.cellKey:sub(i, i)] = (i - 1)
 end
 
 function VX:decodeNum(n)
     local output = 0
 
-    for i=1,#n do
+    for i = 1, #n do
         output = output * (#VX.cellKey)
         output = output + (cheatsheet[n:sub(i, i)])
     end
-    
+
     return output
 end
 
@@ -44,3 +44,5 @@ function VX:setCell(c, i)
 
     Grid:set(x, y, Cell(VX.cells[math.floor(c / 2) % VX.cells], math.floor(c / 18), {}))
 end
+
+CreateFormat("V1", "V1;", nil, require("packages.VX.v1"))
