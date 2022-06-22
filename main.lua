@@ -145,6 +145,7 @@ require "src.grid"
 require "src.movement.push"
 require "src.callback"
 require "src.update"
+require "src.saving"
 
 local packages = ScanDir "packages"
 
@@ -169,6 +170,11 @@ for _, package in ipairs(packages) do
 end
 
 RunQueue "init"
+
+---@diagnostic disable-next-line: lowercase-global
+function output(...)
+  if canShell then return print(...) end
+end
 
 while canShell do
   RunQueue("pre-cmd")
