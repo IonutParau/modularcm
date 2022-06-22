@@ -195,6 +195,8 @@ local function Mod(args)
     print("  compile <package>")
     print("  delete <package>")
     print("  list")
+  else
+    print("Unknown operation " .. action)
   end
 end
 
