@@ -126,7 +126,7 @@ local function Compile(package)
       table.remove(fileNameSplit, 1)
       local fileName = table.concat(fileNameSplit, "/")
 
-      if obfuscateAnswer == "y" then
+      if obfuscateAnswer == "y" and fileName:sub(-4) == ".lua" then
         fileContent = obfuscate(fileName, fileContent)
       end
 
