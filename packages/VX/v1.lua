@@ -13,8 +13,8 @@ return function(str)
   if placementCellLocationsStr[1] ~= "" then
     for _, s in ipairs(placementCellLocationsStr) do
       local ssplit = SplitStr(s, '.')
-      local x = tonumber(ssplit[1])
-      local y = height - tonumber(ssplit[2]) - 1
+      local x = tonumber(ssplit[1]) + 1
+      local y = height - tonumber(ssplit[2])
       grid:setBackground(x, y, Cell("place", 0, {}))
     end
   end
