@@ -32,7 +32,7 @@ function SaveGrid(format)
 end
 
 ---@param string string String is string
-function DecodeGrid(string)
+function DecodeString(string)
     for format, formatData in pairs(formats) do
         if string:sub(1, #(formatData.signature)) == formatData.signature then
             Output('Decoding with ' .. format .. '...')
@@ -53,12 +53,6 @@ BindCommand("save-level", function(args)
 end)
 
 BindCommand("load-level", function(args)
-    local format = args[1] or currentSaving
-
-    if format == nil then
-        print("No level saving format is installed.")
-    else
-        local s = SaveGrid(format)
-        if s then print(s) end
-    end
+    local str = table.concat(args, ' ')
+    Grid = (DecodeString(str) or Grid)
 end)

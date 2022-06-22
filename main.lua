@@ -141,7 +141,7 @@ function JoinPath(...)
 end
 
 ModularCM = {}
-ModularCM.version = "0.-1.1"
+ModularCM.version = "0.0.1 beta"
 
 local packages = ScanDir "packages"
 ModularCM.packages = packages
