@@ -244,6 +244,7 @@ local function Mod(args)
     print("  delete <package>")
     print("  list")
     print("  git <url> <name>")
+    print("  git_update")
   else
     print("Unknown operation " .. action)
   end
