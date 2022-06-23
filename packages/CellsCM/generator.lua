@@ -1,14 +1,17 @@
 local rotOrder = { 0, 2, 3, 1 }
+NewCallback("toGenerate")
 
 ---@param cell Cell
 ---@param x number
 ---@param y number
 ---@param rot number
 -- Transforms a cell into what it should be generated as. By default it is turned into itself (big surprise!). It also can be turned into a different cell. Influenced by generateInto. Return nil to cancel the generation attempt.
-function ToGenerate(cell, x, y, rot)
+function ToGenerate(cell, x, y, rot, gx, gy)
   if cell.id == "empty" then return nil end
 
   local conf = GetCellConfig(cell.id)
+
+  RunCallback("toGenerate", x, y, rot, gx, gy)
 
   if type(conf.generateInto) == "function" then
     return conf.generateInto(table.copy(cell), x, y, rot)
@@ -24,7 +27,7 @@ function DoGen(x, y, rot)
   local bx, by = Grid:indir(x, y, rot, -1)
   local fx, fy = Grid:indir(x, y, rot, 1)
 
-  local bcell = ToGenerate(Grid:at(bx, by), bx, by, rot)
+  local bcell = ToGenerate(Grid:at(bx, by), bx, by, rot, x, y)
 
   if bcell == nil then return end
 
