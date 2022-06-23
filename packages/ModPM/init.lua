@@ -1,5 +1,7 @@
 local json = require "json"
 
+unpack = unpack or table.unpack
+
 local function InstallFromLocal(f)
   local file, err = io.open(f, "r")
 
