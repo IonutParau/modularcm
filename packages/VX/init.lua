@@ -37,7 +37,7 @@ end
 ---@param c number
 ---@param i number
 function VX:setCell(g, c, i)
-    local x = i % g.width
+    local x = i % g.width + 1
     local y = g.height - math.floor(i / g.height) -- We gotta flip it because... Unity
     if c % 2 == 1 then
         g:setBackground(x, y, Cell("place", 0, {}))
