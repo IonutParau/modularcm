@@ -17,6 +17,8 @@ function Cell(id, rot, data)
 end
 
 BindCommand("set-cell", function(args)
+  ---@diagnostic disable-next-line: undefined-field
+  if Grid.setCellCmd then return Grid:setCellCmd(args) end
   if not Grid then return print("No grid found.") end
   local x = tonumber(args[1])
   if not x then return print("X coordinate is not a number.") end
@@ -38,6 +40,8 @@ BindCommand("set-cell", function(args)
 end)
 
 BindCommand("get-cell", function(args)
+  ---@diagnostic disable-next-line: undefined-field
+  if Grid.getCellCmd then return Grid:getCellCmd(args) end
   if not Grid then return print("No grid found.") end
   local x = tonumber(args[1])
   if not x then return print("X coordinate is not a number.") end
@@ -57,6 +61,8 @@ BindCommand("get-cell", function(args)
 end)
 
 BindCommand("set-bg", function(args)
+  ---@diagnostic disable-next-line: undefined-field
+  if Grid.setBgCmd then return Grid:etBgCmd(args) end
   if not Grid then return print("No grid found.") end
   local x = tonumber(args[1])
   if not x then return print("X coordinate is not a number.") end
@@ -76,6 +82,8 @@ BindCommand("set-bg", function(args)
 end)
 
 BindCommand("get-bg", function(args)
+  ---@diagnostic disable-next-line: undefined-field
+  if Grid.getBgCmd then return Grid:getBgCmd(args) end
   if not Grid then return print("No grid found.") end
   local x = tonumber(args[1])
   if not x then return print("X coordinate is not a number.") end
@@ -125,4 +133,20 @@ end
 
 function ToSide(dir, rot)
   return (dir - rot + 2) % 4
+end
+
+function RotateRaw(cell, amount)
+  ---@diagnostic disable-next-line: undefined-field
+  if Grid.rotate then return Grid:rotate(cell, amount) end
+  cell.rot = (cell.rot + amount) % 4
+end
+
+function RotateCell(x, y, amount, dir)
+  local cell = Grid:get(x, y)
+  if not cell then return end
+  local config = GetCellConfig(cell.id)
+  if type(config.canRotate) == "function" then
+    if not config.canRotate(cell, amount, dir) then return end
+  end
+  RotateRaw(cell, amount)
 end

@@ -116,6 +116,7 @@ function _DynamicGrid:new()
   local c = setmetatable({
     cells = {},
     bg = {},
+    type = "dynamci",
   }, self)
 
   c:create()

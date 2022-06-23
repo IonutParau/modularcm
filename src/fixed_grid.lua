@@ -114,6 +114,7 @@ function _FixedGrid:new(width, height)
     height = height,
     cells = {},
     bg = {},
+    type = "fixed",
   }, self)
 
   c:create()
