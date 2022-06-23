@@ -146,6 +146,12 @@ ModularCM.version = "0.0.1 beta"
 
 local packages = ScanDir "packages"
 ModularCM.packages = packages
+
+function ModularCM.getPackages()
+  ModularCM.packages = ScanDir("packages")
+  return ModularCM.packages
+end
+
 ModularCM.shell = function()
   io.write("> ")
   local line = io.read()

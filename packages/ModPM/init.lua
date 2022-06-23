@@ -9,7 +9,7 @@ local function InstallFromLocal(f)
 
   local decompressed = content
 
-  local data = json.decode(decompressed)
+  local data = json.decode(decompressed) or { name = "", files = {} }
 
   local name = data.name
 
@@ -60,6 +60,7 @@ local function InstallFromLocal(f)
   end
 
   file:close()
+  ModularCM.getPackages()
   return true
 end
 
@@ -160,9 +161,44 @@ local function Delete(package)
   if IsWindows then
     os.execute("rmdir " .. JoinPath("packages", package) .. "/s /q")
   else
-    os.execute("rm -rd " .. JoinPath("packages", package) .. " -r")
+    os.execute("rm -rd -rf " .. JoinPath("packages", package) .. " -r")
   end
   print("Deleted " .. package .. ".")
+  ModularCM.getPackages()
+end
+
+local function GitClone(url, packageName)
+  local p = JoinPath("packages", packageName)
+  print("Initiating download...")
+  local s = os.execute("git clone " .. url .. " '" .. p .. "'")
+  print(s and ("Successfully installed " .. packageName) or "Failed to install the package")
+  if s then
+    Delete(JoinPath(packageName, '.git'))
+    local uf = io.open(JoinPath("packages", packageName, 'update.json'), "w")
+    if not uf then return end
+    uf:write(json.encode({ git = url }))
+    uf:close()
+  end
+  ModularCM.getPackages()
+end
+
+local function gitupdatepackage(p)
+  local f = io.open(JoinPath("packages", p, "update.json"))
+  if not f then return end -- No file :megamind:
+  local thing = json.decode(f:read(), 1, nil) or { git = nil }
+
+  if thing.git then
+    local git = thing.git
+    local name = p
+    Delete(p)
+    GitClone(git, name)
+  end
+end
+
+local function GitUpdate()
+  for _, p in ipairs(ModularCM.getPackages()) do
+    gitupdatepackage(p)
+  end
 end
 
 local function Mod(args)
@@ -170,6 +206,7 @@ local function Mod(args)
 
   if action == "add" then
     local f = args[2]
+    if not f then return print("Please specify file name") end
     local s = InstallFromLocal(f)
     if s then
       print("Successfully installed package from local file")
@@ -178,6 +215,7 @@ local function Mod(args)
     end
   elseif action == "compile" then
     local package = args[2]
+    if not package then return print("Please specify package name") end
     print("Compiling...")
     Compile(package)
   elseif action == "list" then
@@ -185,8 +223,18 @@ local function Mod(args)
     for _, package in pairs(packages) do
       print(package)
     end
+  elseif action == "git" then
+    local url = args[2]
+    if not url then return print("Please specify a URL") end
+    local name = args[3]
+    if not name then return print("Please specify a package name to install it as") end
+
+    GitClone(url, name)
+  elseif action == "git_update" then
+    GitUpdate()
   elseif action == "delete" then
     local package = args[2]
+    if not package then return print("Please specify package name") end
     Delete(package)
   elseif action == "help" then
     print("Usage: mod <action> [args]")
@@ -195,6 +243,7 @@ local function Mod(args)
     print("  compile <package>")
     print("  delete <package>")
     print("  list")
+    print("  git <url> <name>")
   else
     print("Unknown operation " .. action)
   end
