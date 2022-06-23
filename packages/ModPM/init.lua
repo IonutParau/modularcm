@@ -1,7 +1,7 @@
 local json = require "json"
 
 local function InstallFromLocal(f)
-  local file, err = io.open(f, "rw")
+  local file, err = io.open(f, "r")
 
   if file == nil then print("Error: " .. err) return false end
 
