@@ -11,7 +11,7 @@ function ToGenerate(cell, x, y, rot, gx, gy)
 
   local conf = GetCellConfig(cell.id)
 
-  RunCallback("toGenerate", x, y, rot, gx, gy)
+  RunCallback("toGenerate", cell, x, y, rot, gx, gy)
 
   if type(conf.generateInto) == "function" then
     return conf.generateInto(table.copy(cell), x, y, rot)
