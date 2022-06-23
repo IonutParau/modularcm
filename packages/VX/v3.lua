@@ -20,20 +20,20 @@ return function(str)
   local cellDataHistory = {}
 
   while dataIndex <= #cells do
-    if cells[dataIndex] == ")" or cells[dataIndex] == "(" then
-      if cells[dataIndex] == ")" then
+    if cells:sub(dataIndex, dataIndex) == ")" or cells:sub(dataIndex, dataIndex) == "(" then
+      if cells:sub(dataIndex, dataIndex) == ")" then
         dataIndex = dataIndex + 2
         offset = VX.cheatsheet[ cells[dataIndex - 1] ]
         length = VX.cheatsheet[ cells[dataIndex] ]
       else
         dataIndex = dataIndex + 1
         temp = ""
-        while cells[dataIndex] ~= ")" and cells[dataIndex] ~= "(" do
-          temp = temp .. cells[dataIndex]
+        while cells:sub(dataIndex, dataIndex) ~= ")" and cells:sub(dataIndex, dataIndex) ~= "(" do
+          temp = temp .. cells:sub(dataIndex, dataIndex)
           dataIndex = dataIndex + 1
         end
         offset = VX:decodeNum(temp)
-        if cells[dataIndex] == ")" then
+        if cells:sub(dataIndex, dataIndex) == ")" then
           dataIndex = dataIndex + 1
           length = VX.cheatsheet[dataIndex]
         else
@@ -53,8 +53,8 @@ return function(str)
         gridIndex = gridIndex + 1
       end
     else
-      VX:setCell(grid, VX.cheatsheet[ cells[dataIndex] ], gridIndex)
-      cellDataHistory[gridIndex] = VX.cheatsheet[ cells[dataIndex] ]
+      VX:setCell(grid, VX.cheatsheet[cells:sub(dataIndex, dataIndex)], gridIndex)
+      cellDataHistory[gridIndex] = VX.cheatsheet[cells:sub(dataIndex, dataIndex)]
       gridIndex = gridIndex + 1
     end
 
