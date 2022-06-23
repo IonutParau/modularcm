@@ -45,7 +45,7 @@ function VX:setCell(g, c, i)
 
     if c >= 72 then return end
 
-    g:set(x, y, Cell(VX.cells[math.floor(c / 2) % VX.cells], math.floor(c / 18), {}))
+    g:set(x, y, Cell(VX.cells[math.floor(c / 2) % #(VX.cells)], math.floor(c / 18), {}))
 end
 
 CreateFormat("V1", "V1;", nil, require("packages.VX.v1"))

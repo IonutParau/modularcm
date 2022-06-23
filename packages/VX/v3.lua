@@ -23,8 +23,8 @@ return function(str)
     if cells:sub(dataIndex, dataIndex) == ")" or cells:sub(dataIndex, dataIndex) == "(" then
       if cells:sub(dataIndex, dataIndex) == ")" then
         dataIndex = dataIndex + 2
-        offset = VX.cheatsheet[ cells[dataIndex - 1] ]
-        length = VX.cheatsheet[ cells[dataIndex] ]
+        offset = VX.cheatsheet[cells:sub(dataIndex - 1, dataIndex - 1)]
+        length = VX.cheatsheet[cells:sub(dataIndex, dataIndex)]
       else
         dataIndex = dataIndex + 1
         temp = ""
@@ -39,8 +39,8 @@ return function(str)
         else
           dataIndex = dataIndex + 1
           temp = ""
-          while cells[dataIndex] ~= ")" do
-            temp = temp .. cells[dataIndex]
+          while cells:sub(dataIndex, dataIndex) ~= ")" do
+            temp = temp .. cells:sub(dataIndex, dataIndex)
             dataIndex = dataIndex + 1
           end
           length = VX:decodeNum(temp)
