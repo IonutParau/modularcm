@@ -29,8 +29,10 @@ return function(str)
         dataIndex = dataIndex + 1
         temp = ""
         while cells:sub(dataIndex, dataIndex) ~= ")" and cells:sub(dataIndex, dataIndex) ~= "(" do
-          temp = temp .. cells:sub(dataIndex, dataIndex)
-          dataIndex = dataIndex + 1
+          if cells:sub(dataIndex, dataIndex) ~= ")" then
+            temp = temp .. cells:sub(dataIndex, dataIndex)
+            dataIndex = dataIndex + 1
+          end
         end
         offset = VX:decodeNum(temp)
         if cells:sub(dataIndex, dataIndex) == ")" then
@@ -40,8 +42,10 @@ return function(str)
           dataIndex = dataIndex + 1
           temp = ""
           while cells:sub(dataIndex, dataIndex) ~= ")" do
-            temp = temp .. cells:sub(dataIndex, dataIndex)
-            dataIndex = dataIndex + 1
+            if cells:sub(dataIndex, dataIndex) ~= ")" then
+              temp = temp .. cells:sub(dataIndex, dataIndex)
+              dataIndex = dataIndex + 1
+            end
           end
           length = VX:decodeNum(temp)
         end
