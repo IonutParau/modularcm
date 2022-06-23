@@ -10,14 +10,15 @@ function ToGenerate(cell, x, y, rot, gx, gy)
   if cell.id == "empty" then return nil end
 
   local conf = GetCellConfig(cell.id)
+  local gcell = table.copy(cell)
 
-  RunCallback("toGenerate", cell, x, y, rot, gx, gy)
+  RunCallback("toGenerate", gcell, x, y, rot, gx, gy)
 
   if type(conf.generateInto) == "function" then
-    return conf.generateInto(table.copy(cell), x, y, rot)
+    return conf.generateInto(gcell, x, y, rot)
   end
 
-  return cell
+  return gcell
 end
 
 ---@param x number
