@@ -1,3 +1,10 @@
+<img 
+  align="right"
+  width="150"
+  height="150"
+  src="https://raw.githubusercontent.com/IonutParau/modularcm/main/logo.png"
+/>
+
 # ModularCM
 
 ModularCM (pronounced "Modular-C-M"), is short for Modular Cell Machine.
