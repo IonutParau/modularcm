@@ -74,6 +74,7 @@ end
 ---@param y number
 ---@param cell Cell
 function _FixedGrid:set(x, y, cell)
+  FixCell(cell, x, y)
   if self:inside(x, y) then
     self.cells[x][y] = cell
   end
@@ -82,15 +83,15 @@ end
 ---@param x number
 ---@param y number
 function _FixedGrid:at(x, y)
-  if not self:inside(x, y) then return Cell("empty", 0, {}) end
-  return self.cells[x][y]
+  if not self:inside(x, y) then return FixCell(Cell("empty", 0, {}), x, y) end
+  return FixCell(self.cells[x][y])
 end
 
 ---@param x number
 ---@param y number
 function _FixedGrid:get(x, y)
   if not self:inside(x, y) then return nil end
-  return self.cells[x][y]
+  return FixCell(self.cells[x][y])
 end
 
 ---@param x number

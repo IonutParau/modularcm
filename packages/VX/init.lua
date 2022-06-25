@@ -12,6 +12,7 @@ function VX:decodeNum(n)
     local output = 0
 
     for i = 1, #n do
+        if VX.cheatsheet[n:sub(i, i)] == nil then return output end
         output = output * (#VX.cellKey)
         output = output + (VX.cheatsheet[n:sub(i, i)])
     end

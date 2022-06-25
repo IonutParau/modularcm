@@ -150,3 +150,15 @@ function RotateCell(x, y, amount, dir)
   end
   RotateRaw(cell, amount)
 end
+
+function FixCell(cell, x, y)
+  cell.x = x
+  cell.y = y
+
+  ---@param dir number
+  ---@param force number
+  ---@param options table
+  cell.push = function(self, dir, force, options) Push(self.x, self.y, dir, force, options) end
+
+  return cell
+end

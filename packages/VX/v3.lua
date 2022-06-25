@@ -50,7 +50,6 @@ return function(str)
           length = VX:decodeNum(temp)
         end
       end
-
       for i = 1, length do
         VX:setCell(grid, cellDataHistory[gridIndex - offset - 1], gridIndex)
         cellDataHistory[gridIndex] = cellDataHistory[gridIndex - offset - 1]

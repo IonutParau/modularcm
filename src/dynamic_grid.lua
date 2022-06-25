@@ -19,7 +19,7 @@ end
 ---@param y number
 ---@param cell Cell
 function _DynamicGrid:set(x, y, cell)
-  self.cells[tostring(x) .. " " .. tostring(y)] = cell
+  self.cells[tostring(x) .. " " .. tostring(y)] = FixCell(cell, x, y)
 end
 
 ---@param x number
@@ -42,7 +42,7 @@ end
 ---@param x number
 ---@param y number
 function _DynamicGrid:get(x, y)
-  return self.cells[tostring(x) .. " " .. tostring(y)] or Cell("empty", 0, {})
+  return FixCell(self.cells[tostring(x) .. " " .. tostring(y)] or Cell("empty", 0, {}), x, y)
 end
 
 ---@param x number
