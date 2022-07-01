@@ -152,20 +152,13 @@ function ModularCM.getPackages()
   return ModularCM.packages
 end
 
-ModularCM.shell = function()
-  io.write("> ")
-  local line = io.read()
-  RunCmd(line)
-  return line
-end
 require "src.cell"
 require "src.grid"
 require "src.movement.push"
 require "src.callback"
 require "src.update"
 require "src.saving"
-
-
+require "src.shell"
 
 local depended = {}
 function Depend(...)
