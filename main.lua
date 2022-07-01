@@ -117,6 +117,7 @@ function Queue(queue, func)
 end
 
 CreateQueue "init"
+CreateQueue "post-init"
 CreateQueue "pre-cmd"
 CreateQueue "post-cmd"
 
@@ -176,11 +177,13 @@ BindCommand("load", function(args)
   Depend(args[1])
 end)
 
+
 for _, package in ipairs(packages) do
   Depend(package)
 end
 
 RunQueue "init"
+RunQueue "post-init"
 
 while canShell do
   RunQueue("pre-cmd")
