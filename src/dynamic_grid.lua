@@ -1,6 +1,7 @@
 ---@class DynamicGrid
 ---@field cells table
 ---@field bg table
+---@field type string
 local _DynamicGrid = {}
 _DynamicGrid.__index = _DynamicGrid
 

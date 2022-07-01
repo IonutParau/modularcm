@@ -3,6 +3,7 @@
 ---@field bg table
 ---@field width number
 ---@field height number
+---@field type string
 local _FixedGrid = {}
 _FixedGrid.__index = _FixedGrid
 

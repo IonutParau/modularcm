@@ -52,3 +52,5 @@ end
 CreateFormat("V1", "V1;", nil, require("packages.VX.v1"))
 CreateFormat("V2", "V2;", nil, require("packages.VX.v2"))
 CreateFormat("V3", "V3;", nil, require("packages.VX.v3"))
+local format = require("packages.VX.vx")
+CreateFormat("VX", "VX:", format.encode, format.decode)
