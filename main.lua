@@ -159,14 +159,12 @@ require "src.movement.push"
 require "src.callback"
 require "src.update"
 require "src.saving"
-require "src.shell"
 
 local depended = {}
 function Depend(...)
   local t = { ... }
   for _, p in ipairs(t) do
     if not depended[p] then
-      print("Loaded package " .. p)
       depended[p] = true
       require("packages." .. p .. ".init")
     end
@@ -178,9 +176,39 @@ BindCommand("load", function(args)
 end)
 
 
-for _, package in ipairs(packages) do
-  Depend(package)
+local boots = ScanDir("start")
+if #boots < 2 then
+  ModularCM.startSystem = boots[1]
+else
+  print("Multiple start systems found")
+  print("Please select one of the following (by inputing the number next to them):")
+  for i=1,#boots do
+    print(tostring(i) .. ". " .. boots[i])
+  end
+  local n = tonumber(io.read("l")) or 1
+  ModularCM.startSystem = boots[n]
 end
+
+if not ModularCM.startSystem then error("Invalid Start System") end
+
+local shells = ScanDir("shell")
+
+if #shells == 1 then
+  ModularCM.shell = require("shell." .. shells[1] .. ".shell")
+elseif #shells == 0 then
+  error("No shell found")
+else
+  print("Multiple start systems found")
+  print("Please select one of the following (by inputing the number next to them):")
+  for i=1,#shells do
+    print(tostring(i) .. ". " .. shells[i])
+  end
+  local n = tonumber(io.read("l")) or 1
+  if not shells[n] then return error("Invalid Shell") end
+  ModularCM.shell = require("shell." .. shells[n] .. ".shell")
+end
+
+require("start." .. ModularCM.startSystem .. ".boot")
 
 RunQueue "init"
 RunQueue "post-init"
