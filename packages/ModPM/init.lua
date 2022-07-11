@@ -2,7 +2,8 @@ local json = require "json"
 
 unpack = unpack or table.unpack
 
-local function InstallFromLocal(f)
+local function InstallFromLocal(f, folder)
+  folder = folder or "packages"
   local file, err = io.open(f, "r")
 
   if file == nil then print("Error: " .. err) return false end
@@ -19,7 +20,7 @@ local function InstallFromLocal(f)
 
   print("Installing " .. name)
 
-  os.execute("mkdir " .. JoinPath("packages", name))
+  os.execute("mkdir " .. JoinPath(folder, name))
 
   local files = data.files
 
@@ -48,10 +49,10 @@ local function InstallFromLocal(f)
 
     if fileContent == 1 then
       print("Creating directory " .. path .. "...")
-      os.execute("mkdir " .. JoinPath("packages", name, unpack(SplitStr(path, "/"))))
+      os.execute("mkdir " .. JoinPath(folder, name, unpack(SplitStr(path, "/"))))
     else
       print("Creating file " .. path .. "...")
-      local p = JoinPath("packages", name, unpack(SplitStr(path, "/")))
+      local p = JoinPath(folder, name, unpack(SplitStr(path, "/")))
       local thisFile, ferr = io.open(p, "wb")
       if not thisFile then print("Failed to build file " .. path .. ": " .. ferr) return false end
       ---@diagnostic disable-next-line: need-check-nil
@@ -103,8 +104,9 @@ local function obfuscate(file, content, amount)
   end
 end
 
-local function Compile(package)
-  local t = getpackagefiles(JoinPath("packages", package))
+local function Compile(package, folder)
+  folder = folder or "packages"
+  local t = getpackagefiles(JoinPath(folder, package))
   local sep = IsWindows and "\\" or "/"
 
   local files = {}
@@ -154,38 +156,41 @@ local function Compile(package)
     print("Could not open file for writing. Reason: " .. err)
     return
   end
-  file:write(compressed)
+  file:write(tostring(compressed))
   file:close()
 end
 
-local function Delete(package)
+local function Delete(package, folder)
+  folder = folder or "packages"
   print("Deleting " .. package .. "...")
   if IsWindows then
-    os.execute("rmdir " .. JoinPath("packages", package) .. "/s /q")
+    os.execute("rmdir " .. JoinPath(folder, package) .. "/s /q")
   else
-    os.execute("rm -rd -rf " .. JoinPath("packages", package) .. " -r")
+    os.execute("rm -rd -rf " .. JoinPath(folder, package) .. " -r")
   end
   print("Deleted " .. package .. ".")
   ModularCM.getPackages()
 end
 
-local function GitClone(url, packageName)
-  local p = JoinPath("packages", packageName)
+local function GitClone(url, packageName, folder)
+  folder = folder or "packages"
+  local p = JoinPath(folder, packageName)
   print("Initiating download...")
   local s = os.execute("git clone " .. url .. " '" .. p .. "'")
   print(s and ("Successfully installed " .. packageName) or "Failed to install the package")
   if s then
     Delete(JoinPath(packageName, '.git'))
-    local uf = io.open(JoinPath("packages", packageName, 'update.json'), "w")
+    local uf = io.open(JoinPath(folder, packageName, 'update.json'), "w")
     if not uf then return end
-    uf:write(json.encode({ git = url }))
+    uf:write(tostring(json.encode({ git = url })))
     uf:close()
   end
   ModularCM.getPackages()
 end
 
-local function gitupdatepackage(p)
-  local f = io.open(JoinPath("packages", p, "update.json"))
+local function gitupdatepackage(p, folder)
+  folder = folder or "packages"
+  local f = io.open(JoinPath(folder, p, "update.json"))
   if not f then return end -- No file :megamind:
   local thing = json.decode(f:read(), 1, nil) or { git = nil }
 
@@ -209,7 +214,7 @@ local function Mod(args)
   if action == "add" then
     local f = args[2]
     if not f then return print("Please specify file name") end
-    local s = InstallFromLocal(f)
+    local s = InstallFromLocal(f, args[3])
     if s then
       print("Successfully installed package from local file")
     else
@@ -231,21 +236,21 @@ local function Mod(args)
     local name = args[3]
     if not name then return print("Please specify a package name to install it as") end
 
-    GitClone(url, name)
+    GitClone(url, name, args[3])
   elseif action == "git_update" then
     GitUpdate()
   elseif action == "delete" then
     local package = args[2]
     if not package then return print("Please specify package name") end
-    Delete(package)
+    Delete(package, args[3])
   elseif action == "help" then
     print("Usage: mod <action> [args]")
     print("Actions:")
-    print("  add <file>")
-    print("  compile <package>")
-    print("  delete <package>")
+    print("  add <file> [folder]")
+    print("  compile <package> [folder]")
+    print("  delete <package> [folder]")
     print("  list")
-    print("  git <url> <name>")
+    print("  git <url> <name> [folder]")
     print("  git_update")
   else
     print("Unknown operation " .. action)
