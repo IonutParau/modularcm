@@ -74,7 +74,7 @@ end
 function SplitStr(str, s)
   local sep, fields = s or " ", {}
   local pattern = string.format("([^%s]+)", sep)
-  local _, _ = str:gsub(pattern, function(c) fields[#fields + 1] = c end)
+  local _, _ = str:gsub(pattern, function(c) table.insert(fields, c) end)
   return fields
 end
 
