@@ -4,8 +4,8 @@ return function(str)
   local segs = SplitStr(str, ';')
   table.remove(segs, 1) -- Remove header
 
-  local width = tonumber(segs[1])
-  local height = tonumber(segs[2])
+  local width = tonumber(segs[1]) or 100
+  local height = tonumber(segs[2]) or 100
 
   local grid = FixedGrid(width, height)
 
@@ -23,10 +23,10 @@ return function(str)
   if cellStr[1] ~= "" then
     for _, s in ipairs(cellStr) do
       local split = SplitStr(s, '.')
-      local x = tonumber(split[2])
+      local x = tonumber(split[2]) or 0
       local y = height - tonumber(split[3]) - 1
       local id = VX.cells[tonumber(split[1])]
-      local rot = tonumber(split[4])
+      local rot = tonumber(split[4]) or 0
 
       grid:set(x, y, Cell(id, rot, {}))
     end

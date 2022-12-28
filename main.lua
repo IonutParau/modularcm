@@ -33,6 +33,7 @@ function ScanDir(directory)
   else
     pfile = popen('ls -a "' .. directory .. '"')
   end
+  if pfile == nil then return {} end
   for filename in pfile:lines() do
     if filename:sub(1, 1) ~= "." then
       i = i + 1
