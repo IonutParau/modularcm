@@ -182,7 +182,7 @@ if #boots < 2 then
 else
   print("Multiple start systems found")
   print("Please select one of the following (by inputing the number next to them):")
-  for i=1,#boots do
+  for i = 1, #boots do
     print(tostring(i) .. ". " .. boots[i])
   end
   local n = tonumber(io.read("l")) or 1
@@ -198,9 +198,9 @@ if #shells == 1 then
 elseif #shells == 0 then
   error("No shell found")
 else
-  print("Multiple start systems found")
+  print("Multiple shells found")
   print("Please select one of the following (by inputing the number next to them):")
-  for i=1,#shells do
+  for i = 1, #shells do
     print(tostring(i) .. ". " .. shells[i])
   end
   local n = tonumber(io.read("l")) or 1
