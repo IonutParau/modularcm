@@ -15,7 +15,7 @@ end
 local function encodeCell(cell, bg, x, y, gridType)
   if gridType == "fixed" then
     if isSimpleCell(cell, bg) then
-      return tostring(cell.id .. tostring(cell.rot) .. "|" .. bg.id .. tostring(bg.rot))
+      return tostring(cell.id) .. tostring(cell.rot) .. "|" .. bg.id .. tostring(bg.rot)
     else
       return { cell.id, cell.rot, cell.data, bg.id, bg.rot, bg.data }
     end
@@ -25,6 +25,89 @@ local function encodeCell(cell, bg, x, y, gridType)
         "." .. tostring(y) .. ":" .. cell.id .. tostring(cell.rot) .. "|" .. bg.id .. tostring(bg.rot))
     else
       return { x, y, cell.id, cell.rot, cell.data, bg.id, bg.rot, bg.data }
+    end
+  end
+end
+
+---@param encoded string|table
+---@param gridType "fixed"|"dynamic"
+---@return Cell|nil, Cell|nil, number|nil, number|nil
+local function decodeCell(encoded, gridType)
+  if gridType == "fixed" then
+    if type(encoded) == "string" then
+      local segments = SplitStr(encoded, '|')
+
+      local seg1 = segments[1]
+      local seg2 = segments[2]
+
+      local cellID = seg1:sub(1, -2)
+      local backID = seg2:sub(1, -2)
+
+      local cellRot = tonumber(seg1:sub(#seg1, #seg1))
+      local bgRot = tonumber(seg2:sub(#seg2, #seg2))
+
+      if cellRot == nil then return end
+      if bgRot == nil then return end
+
+      return Cell(cellID, cellRot, {}), Cell(cellID, cellRot, {})
+    elseif type(encoded) == "table" then
+      ---@type Cell[]
+      local cells = {}
+
+      for i = 1, #encoded, 3 do
+        ---@type string
+        local id = encoded[i]
+        ---@type number
+        local rot = encoded[i + 1]
+        ---@type table
+        local data = encoded[i + 2]
+
+        table.insert(cells, Cell(id, rot, data))
+      end
+
+      return cells[1], cells[2]
+    end
+  elseif gridType == "dynamic" then
+    if type(encoded) == "string" then
+      local posAndData = SplitStr(encoded, ":")
+      local posParts = SplitStr(encoded, '.')
+      local x = tonumber(posParts[1]) or 0
+      local y = tonumber(posParts[2]) or 0
+
+      local data = SplitStr(encoded, '|')
+
+      ---@type Cell[]
+      local cells = {}
+
+      for i = 1, #data, 2 do
+        local id = data[i]
+        local rot = tonumber(data[i + 1])
+      end
+
+      return cells[1], cells[2]
+    elseif type(encoded) == "table" then
+      ---@type number
+      local x = encoded[1]
+      ---@type number
+      local y = encoded[2]
+
+      ---@type Cell[]
+      local cells = {}
+
+      for i = 3, #encoded, 3 do
+        ---@type string
+        local id = encoded[i]
+
+        ---@type number
+        local rot = encoded[i + 1]
+
+        ---@type table
+        local data = encoded[i + 2]
+
+        table.insert(cells, Cell(id, rot, data))
+      end
+
+      return cells[1], cells[2], x, y
     end
   end
 end
@@ -66,9 +149,58 @@ local function encode(grid)
 end
 
 ---@param str string
+---@return FixedGrid|DynamicGrid
 local function decode(str)
   ---@type FixedGrid|DynamicGrid
   local grid
+
+  local parts = SplitStr(str, ';')
+  local title = parts[2]
+  local desc = parts[3]
+  local cellData = json.decode(deflate:DecompressDeflate(deflate:DecodeForPrint(parts[4])))
+  local gridData = json.decode(deflate:DecompressDeflate(deflate:DecodeForPrint(parts[5])))
+
+  local width
+  local height
+
+  if gridData.GT == "fixed" then
+    width = tonumber(parts[6]) or 0
+    height = tonumber(parts[7]) or 0
+    grid = FixedGrid(width, height)
+  elseif gridData.GT == "dynamic" then
+    grid = DynamicGrid()
+  end
+
+  ---@diagnostic disable-next-line: param-type-mismatch
+  local cellDataArr = (type(cellData) == "table") and cellData or SplitStr(cellData, ",")
+
+  if gridData.GT == "fixed" then
+    local i = 0
+    grid:loopGrid(function(x, y)
+      i = i + 1
+
+      local cell, bg = decodeCell(cellDataArr[i], gridData.GT)
+
+      if cell == nil then return end
+      if bg == nil then return end
+
+      grid:set(x, y, cell)
+      grid:setBackground(x, y, bg)
+    end, 2)
+  elseif gridData.GT == "dynamic" then
+    for i = 1, #cellDataArr do
+      local cell, bg, x, y = decodeCell(cellDataArr[i], gridData.GT)
+
+      if x == nil or y == nil or cell == nil or bg == nil then
+        return grid
+      end
+
+      grid:set(x, y, cell)
+      grid:setBackground(x, y, bg)
+    end
+  end
+
+  return grid
 end
 
 return {

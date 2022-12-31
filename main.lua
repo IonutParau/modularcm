@@ -72,6 +72,7 @@ end
 
 ---@param str string
 ---@param s string
+---@return string[]
 function SplitStr(str, s)
   local sep, fields = s or " ", {}
   local pattern = string.format("([^%s]+)", sep)

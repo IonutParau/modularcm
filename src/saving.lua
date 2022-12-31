@@ -32,6 +32,7 @@ function SaveGrid(format)
 end
 
 ---@param string string String is string
+---@return FixedGrid|DynamicGrid|nil
 function DecodeString(string)
     for format, formatData in pairs(formats) do
         if string:sub(1, #(formatData.signature)) == formatData.signature then
