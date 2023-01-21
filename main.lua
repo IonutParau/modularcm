@@ -70,14 +70,19 @@ function Shell(cmd, args)
   end
 end
 
----@param str string
----@param s string
+---@param inputstr string
+---@param sep string
 ---@return string[]
-function SplitStr(str, s)
-  local sep, fields = s or " ", {}
-  local pattern = string.format("([^%s]+)", sep)
-  local _, _ = str:gsub(pattern, function(c) table.insert(fields, c) end)
-  return fields
+function SplitStr(inputstr, sep)
+  sep = sep or '%s'
+  local t = {}
+  for field, s in string.gmatch(inputstr, "([^" .. sep .. "]*)(" .. sep .. "?)") do
+    table.insert(t, field)
+    if s == "" then
+      return t
+    end
+  end
+  return t
 end
 
 function ParseCommand(str)

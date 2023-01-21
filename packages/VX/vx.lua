@@ -1,5 +1,6 @@
 local deflate = require "LibDeflate"
 local json = require "json"
+require "base64"
 
 ---@param cell Cell
 ---@param bg Cell
@@ -137,8 +138,8 @@ local function encode(grid)
   end
 
   local str = "VX;;;"
-  str = str .. deflate:EncodeForPrint(deflate:CompressDeflate(json.encode(cellData))) .. ";"
-  str = str .. deflate:EncodeForPrint(deflate:CompressDeflate(json.encode(gridData))) .. ";"
+  str = str .. to_base64(deflate:CompressDeflate(json.encode(cellData))) .. ";"
+  str = str .. to_base64(deflate:CompressDeflate(json.encode(gridData))) .. ";"
 
   if grid.type == "fixed" then
     str = str .. tostring(grid.width) .. ";"
@@ -151,14 +152,16 @@ end
 ---@param str string
 ---@return FixedGrid|DynamicGrid
 local function decode(str)
+
   ---@type FixedGrid|DynamicGrid
   local grid
+
 
   local parts = SplitStr(str, ';')
   local title = parts[2]
   local desc = parts[3]
-  local cellData = json.decode(deflate:DecompressDeflate(deflate:DecodeForPrint(parts[4])))
-  local gridData = json.decode(deflate:DecompressDeflate(deflate:DecodeForPrint(parts[5])))
+  local cellData = json.decode(deflate:DecompressDeflate(from_base64(parts[4])))
+  local gridData = json.decode(deflate:DecompressDeflate(from_base64(parts[5])))
 
   local width
   local height
